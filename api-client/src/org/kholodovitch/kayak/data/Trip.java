@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class Trip {
 	private static Unmarshaller unmarshaller;
 
-	static{
+	static {
 		try {
 			JAXBContext jc = JAXBContext.newInstance(Trip.class);
 			unmarshaller = jc.createUnmarshaller();
@@ -26,17 +26,16 @@ public class Trip {
 		}
 	}
 
-	public static Trip parse(String xml) throws JAXBException
-	{
-		return (Trip) unmarshaller.unmarshal( new ByteArrayInputStream( xml.getBytes()));
+	public static Trip parse(String xml) throws JAXBException {
+		return (Trip) unmarshaller.unmarshal(new ByteArrayInputStream(xml.getBytes()));
 	}
-	
+
 	@XmlAttribute(name = "id")
 	public String Id;
-	
-	@XmlAttribute(name = "price")
+
+	@XmlElement(name = "price")
 	public Price price;
-	
+
 	@XmlElementWrapper(name = "legs")
 	@XmlElement(name = "leg")
 	public Leg[] Legs;

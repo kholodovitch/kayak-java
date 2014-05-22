@@ -1,10 +1,14 @@
 package org.kholodovitch.kayak;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
@@ -110,30 +114,28 @@ public class KayakSearch {
 		return data;
 	}
 
-	public String get(String url) throws IOException, HttpException {
-		URI uri = URI.create(url);
-		DefaultBHttpClientConnection conn = new DefaultBHttpClientConnection(8 * 1024);
-		BasicHttpRequest request = new BasicHttpRequest("GET", uri.getPath() + "?" + uri.getQuery());
-		HttpRequestExecutor httpexecutor = new HttpRequestExecutor();
-		HttpCoreContext coreContext = HttpCoreContext.create();
-		HttpHost host = new HttpHost(uri.getHost(), 80);
-		coreContext.setTargetHost(host);
-
-		for (Entry<String, String> entry : headers.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			request.addHeader(key, value);
+	public String get(String urlToRead) throws IOException, HttpException {
+		URL url;
+		HttpURLConnection conn;
+		BufferedReader rd;
+		String line;
+		StringBuilder result = new StringBuilder(500 * 1000);
+		try {
+			url = new URL(urlToRead);
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			while ((line = rd.readLine()) != null) {
+				result.append(line);
+				result.append('\n');
+			}
+			rd.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		if (!conn.isOpen()) {
-			Socket socket = new Socket(host.getHostName(), host.getPort() > 0 ? host.getPort() : 80);
-			conn.bind(socket);
-		}
-		HttpResponse response = httpexecutor.execute(request, conn, coreContext);
-
-		String retval = EntityUtils.toString(response.getEntity());
-		conn.close();
-		return retval;
+		return result.toString();
 	}
 
 	public boolean isComplete(String results) throws Exception {
