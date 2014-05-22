@@ -3,7 +3,6 @@ package org.kholodovitch.kayak;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -102,11 +101,6 @@ public class KayakSearch {
 		});
 
 		String data = get(url + "?" + values);
-
-		PrintWriter writer = new PrintWriter("bin/output.xml", "UTF-8");
-		writer.print(data);
-		writer.close();
-
 		return SearchResult.parse(data);
 	}
 
@@ -120,6 +114,10 @@ public class KayakSearch {
 			url = new URL(urlToRead);
 			conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
+			for (Map.Entry<String, String> entry : headers.entrySet()) {
+				conn.setRequestProperty(entry.getKey(), entry.getValue());
+			}
+
 			rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			while ((line = rd.readLine()) != null) {
 				result.append(line);
