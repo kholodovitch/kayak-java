@@ -55,4 +55,24 @@ public class SearchRequest {
 		return cabin;
 	}
 
+	public void setOrig(String orig) {
+		this.orig = orig;
+	}
+
+	public void setDest(String dest) {
+		this.dest = dest;
+	}
+
+	public void setDepartDate(String departDate) {
+		this.departDate = departDate;
+	}
+
+	public void setReturnDate(String returnDate) {
+		this.returnDate = returnDate;
+	}
+
+	public void setOneway(boolean isOneway) {
+		this.isOneway = isOneway;
+	}
+
 }

@@ -25,5 +25,15 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/libraries/jaxb-ri-2.2.7/lib/jaxb-core.jar</locationURI>
 		</link>
+		<link>
+			<name>lib/httpclient-4.3.3.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/libraries/httpcomponents-client-4.3.3/lib/httpclient-4.3.3.jar</locationURI>
+		</link>
+		<link>
+			<name>lib/httpcore-4.3.2.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/libraries/httpcomponents-client-4.3.3/lib/httpcore-4.3.2.jar</locationURI>
+		</link>
 	</linkedResources>
 </projectDescription>
