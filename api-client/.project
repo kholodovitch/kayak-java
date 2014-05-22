@@ -14,4 +14,16 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>lib/jaxb-api.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/libraries/jaxb-ri-2.2.7/lib/jaxb-api.jar</locationURI>
+		</link>
+		<link>
+			<name>lib/jaxb-core.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/libraries/jaxb-ri-2.2.7/lib/jaxb-core.jar</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
