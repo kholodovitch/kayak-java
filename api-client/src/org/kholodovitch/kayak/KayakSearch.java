@@ -3,6 +3,7 @@ package org.kholodovitch.kayak;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -12,12 +13,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.http.HttpException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 public class KayakSearch {
@@ -81,7 +82,7 @@ public class KayakSearch {
 		searchid = dom.getElementsByTagName("searchid").item(0).getChildNodes().item(0).getNodeValue();
 	}
 
-	public String getResults(int c) throws IOException, HttpException {
+	public SearchResult getResults(int c) throws IOException, HttpException, JAXBException {
 		final int localC = c < 1 ? 1 : c;
 
 		String url = "http://api.kayak.com/s/basic/flight";
@@ -101,7 +102,12 @@ public class KayakSearch {
 		});
 
 		String data = get(url + "?" + values);
-		return data;
+
+		PrintWriter writer = new PrintWriter("bin/output.xml", "UTF-8");
+		writer.print(data);
+		writer.close();
+
+		return SearchResult.parse(data);
 	}
 
 	public String get(String urlToRead) throws IOException, HttpException {
@@ -128,21 +134,18 @@ public class KayakSearch {
 		return result.toString();
 	}
 
-	public boolean isComplete(String results) throws Exception {
+	public boolean isComplete(SearchResult results) throws Exception {
 		if (results == null)
 			results = getResults(1);
 
-		Document dom = parseString(results);
-		Node morepending = dom.getElementsByTagName("morepending").item(0);
-		int count = Integer.parseInt(dom.getElementsByTagName("count").item(0).getChildNodes().item(0).getNodeValue());
 		boolean complete = false;
-
-		if (morepending.getChildNodes().getLength() == 0 && count > 0) {
+		boolean isEmptyMorePending = results.MorePending == null || results.MorePending.length() == 0;
+		if (isEmptyMorePending && results.Count > 0) {
 			complete = true;
-			this.count = count;
+			this.count = results.Count;
 		} else if ((new Date().getTime() - start_time.getTime()) > 60 * 1000) {
 			complete = true;
-			this.count = count;
+			this.count = results.Count;
 		}
 		return complete;
 	}

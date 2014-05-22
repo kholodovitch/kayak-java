@@ -1,17 +1,10 @@
 package org.kholodovitch.kayak;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-
-import org.apache.http.HttpException;
 
 public class ApiClient {
 	public static void main(String[] args) throws Exception {
@@ -27,7 +20,7 @@ public class ApiClient {
 		marshaller.marshal(result, new File("bin/reserialize.xml"));
 	}
 
-	protected static void test() throws Exception, IOException, HttpException, JAXBException, FileNotFoundException, UnsupportedEncodingException, InterruptedException {
+	protected static SearchResult test() throws Exception {
 		KayakSearch ks = new KayakSearch();
 		SearchRequest request = new SearchRequest();
 		request.setOrig("SLC");
@@ -39,20 +32,15 @@ public class ApiClient {
 
 		boolean complete = false;
 		while (!complete) {
-			String iter_results = ks.getResults(1);
+			SearchResult iter_results = ks.getResults(1);
 			if (ks.isComplete(iter_results)) {
 				complete = true;
-				String search_result_raw_data = ks.getResults(ks.count);
-				if (search_result_raw_data != null) {
-					SearchResult result = SearchResult.parse(search_result_raw_data);
-					System.out.println(result.Count);
-				}
-
-				PrintWriter writer = new PrintWriter("bin/output.xml", "UTF-8");
-				writer.print(search_result_raw_data);
-				writer.close();
+				
+				return ks.getResults(ks.count);
 			}
-			Thread.sleep(5 * 1000);
+			Thread.sleep(10 * 1000);
 		}
+		
+		return null;
 	}
 }
