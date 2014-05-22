@@ -1,4 +1,4 @@
 kayak-java
 ==========
 
-Java client for Kayak API.
+Java API-client for kayak.com.
