@@ -23,8 +23,9 @@ public class KayakSearch {
 			c = 1;
 	}
 
-	public in get(String url) {
+	public int get(String url) {
 	}
 	
-	public is_complete(self, results=None): 
+	public boolean isComplete(Object results)
+	{}
 }
