@@ -1,7 +1,7 @@
 import pykayak
 import time
 ks = pykayak.KayakSearch('mCHpMz2L_a_OrEkz3FSiDg')
-ks.start_search("SLC","AMM","n","01/22/2014","01/22/2014",travelers=2);
+ks.start_search("SLC","AMM","n","05/26/2014","05/28/2014",travelers=1);
 kp = pykayak.KayakParser()
 complete = False
 success = False
@@ -11,6 +11,7 @@ while not complete:
     if ks.is_complete(iter_results):
         complete = True
         search_result_raw_data = ks.get_results(ks.count)
+        print search_result_raw_data;
         if(search_result_raw_data is not None):
             try:
                 search_result_data = kp.parse(search_result_raw_data)
