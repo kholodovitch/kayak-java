@@ -3,6 +3,7 @@ package org.kholodovitch.kayak;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -112,10 +113,10 @@ public class KayakSearch {
 	public String get(String url) throws IOException, HttpException {
 		URI uri = URI.create(url);
 		DefaultBHttpClientConnection conn = new DefaultBHttpClientConnection(8 * 1024);
-		BasicHttpRequest request = new BasicHttpRequest("GET", uri.getPath());
+		BasicHttpRequest request = new BasicHttpRequest("GET", uri.getPath() + "?" + uri.getQuery());
 		HttpRequestExecutor httpexecutor = new HttpRequestExecutor();
 		HttpCoreContext coreContext = HttpCoreContext.create();
-		HttpHost host = new HttpHost(uri.getHost(), uri.getPort());
+		HttpHost host = new HttpHost(uri.getHost(), 80);
 		coreContext.setTargetHost(host);
 
 		for (Entry<String, String> entry : headers.entrySet()) {
@@ -124,6 +125,10 @@ public class KayakSearch {
 			request.addHeader(key, value);
 		}
 
+		if (!conn.isOpen()) {
+			Socket socket = new Socket(host.getHostName(), host.getPort() > 0 ? host.getPort() : 80);
+			conn.bind(socket);
+		}
 		HttpResponse response = httpexecutor.execute(request, conn, coreContext);
 
 		String retval = EntityUtils.toString(response.getEntity());
